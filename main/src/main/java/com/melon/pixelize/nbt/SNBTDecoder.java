@@ -203,10 +203,8 @@ public class SNBTDecoder {
             }
             case Type.COMPOUND: {
                 String Ori = SNBTPayload;
-                String snap = Ori;//TODO:delete test code
                 Ori = Ori.substring(1);
                 List<NBTElement<?>> elements = new ArrayList<>();
-                try {//TODO:delete test code
                    
                 while (Ori.length() > 0) {
                     String nestedKeyName = getKeyName(Ori, 0);
@@ -216,13 +214,6 @@ public class SNBTDecoder {
                     elements.add(decodePayload(nestedType, nestedKeyName, nestedPayLoad));
                     
                 }
-
-                } catch (Exception e) {//TODO:delete test code
-                    String s = "";
-                    for(NBTElement<?> el:elements)
-                        s+=el.toString()+",";
-                    throw new RuntimeException(snap+" \n "+s);
-                }//TODO:delete test code
 
                 return new NBTCompound(key, elements);
             }
