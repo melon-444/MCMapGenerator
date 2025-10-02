@@ -5,6 +5,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -87,4 +88,79 @@ public class ConvertTools {
 
         return null;
     }
+
+    public static ArrayList<ArrayList<byte[]>> convertImageToMapTIles(Path input) {
+        BufferedImage image;
+        try {
+            image = ImageIO.read(input.toFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        int w = image.getWidth(), h = image.getHeight();
+        int xTiles = w / 128 + (w % 128 == 0 ? 0 : 1), yTiles = h / 128 + (h % 128 == 0 ? 0 : 1);
+
+        int[] rgbarr = image.getRGB(0, 0, w, h, null, 0, w);
+
+        int THREAD_CNT = xTiles * yTiles;
+        ExecutorService pool = Executors.newFixedThreadPool(THREAD_CNT);
+
+        ArrayList<ArrayList<byte[]>> tileMap = new ArrayList<ArrayList<byte[]>>();
+        for (int i = 0; i < xTiles; i++){
+            ArrayList<byte[]> ele =new ArrayList<>(yTiles);
+            for(int j = 0;j<yTiles;j++){
+                ele.add(new byte[0]);
+            }
+            tileMap.add(ele);
+        }
+            
+
+        int currX = 0, currY = 0;
+        int progress[] = new int[]{0};
+        final int total_prog = xTiles*yTiles;
+        
+
+        while (currY < yTiles) {
+            final int tempcX = currX, tempcY = currY;
+            pool.submit(() -> {
+                byte[] tile = new byte[16384];
+                for (int x = 0; x < 128; x++) {
+                    for (int y = 0; y < 128; y++) {
+                        MCMapColor clr = MCMapColor.NULL;
+                        if ((tempcX * 128 + x) < w - 1 && (tempcY * 128 + y) < h - 1)
+                            clr = MCMapColor.getColorByRGBVal(rgbarr[(tempcX * 128 + x) + w * (tempcY * 128 + y)]);
+                        tile[x + 128 * y] = MCMapColor.getMapColor(clr.getBase(), clr.getModifier());
+                    }
+                    tileMap.get(tempcX).set(tempcY, tile);
+                }
+            //System.out.println("Tile ["+tempcX+","+tempcY+"] compelete!");
+            progress[0]++;
+            });
+            if (++currX >= xTiles) {
+                currX = 0;
+                currY++;
+            }
+        }
+
+        pool.shutdown();
+
+        
+        int rolling_prog = 0;
+        char[] rolling_char = new char[]{'\\','|','/','-'};
+        while (!pool.isTerminated()) {
+            System.out.println("Progress: "+progress[0]+" / "+total_prog+rolling_char[rolling_prog]);
+            rolling_prog=++rolling_prog%4;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        
+        
+
+        return tileMap;
+    }
+
+    
 }

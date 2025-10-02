@@ -2,9 +2,9 @@ package com.melon.pixelize.utils;
 
 public enum MCMapColor implements ColorEnumTemplate {
 
-    /*
+    
     NULL,
-
+    /* 
     NONE_LOW(null, 0, 0),
     NONE_NORMAL(null, 0, 1),
     NONE_RASS_HIGH(null, 0, 2),
@@ -382,10 +382,10 @@ public enum MCMapColor implements ColorEnumTemplate {
         int r = (color >> 16) & 0xff, g = (color >> 8) & 0xff, b = color & 0xff;
 
         int similarIndex = ColorEnumTemplate.colorDistance(r, g, b, MCMapColor.COLOR_BLACK_LOWEST);
-
         MCMapColor candidateColor = MCMapColor.COLOR_BLACK_LOWEST;
+        
         for (MCMapColor clr : MCMapColor.values()) {
-            if (clr == COLOR_BLACK_LOWEST)
+            if (clr == COLOR_BLACK_LOWEST||clr==NULL)
                 continue;
             int nextSimilarIndex = ColorEnumTemplate.colorDistance(r, g, b, clr);
             if (nextSimilarIndex < similarIndex) {
