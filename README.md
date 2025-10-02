@@ -1,47 +1,11 @@
-# Pixelize
+# MCMapGenerator
 
-一个用于将图片像素化处理的 Java 项目。
+MCMapGenerator 是一个用于 Minecraft 地图生成和像素化处理的 Java 项目。项目结构包括 NBT 数据解析、地图颜色工具、以及地图生成测试等模块。主要功能如下：
 
-## 项目结构
+- 支持 Minecraft NBT 格式的读写与解析
+- 提供地图颜色转换与像素化工具
+- 包含地图生成相关的测试代码
+- 采用 Gradle 构建，源码位于 `src/main/java/com/melon/pixelize/`
+- 测试代码位于 `src/test/java/com/melon/pixelize/`
 
-- `main/src/main/java/com/melon/pixelize/App.java`：主程序入口。
-- `ignore/input.png`：输入图片示例。
-- `ignore/preprocess.png`：输出图片示例。
-
-## 功能简介
-
-- 支持读取本地图片并进行像素化处理。
-- 多线程加速像素计算。
-- 支持自定义像素块大小，自动调整输出图片尺寸。
-- 颜色映射采用自定义枚举 `App.Color` 实现，自动选择最接近的预设颜色。
-
-## 快速开始
-
-1. **准备输入图片**  
-   将待处理图片放入 `ignore/input.png`。
-
-2. **编译运行**  
-   在项目根目录下执行：
-
-   ```sh
-   javac -d out main/src/main/java/com/melon/pixelize/App.java
-   java -cp out com.melon.pixelize.App
-   ```
-
-   处理结果将输出到 `ignore/preprocess.png`。
-
-## 主要代码说明
-
-- 主处理流程在 `ConvertTools.convertImageToPixelArt` 方法中实现。
-- 像素块颜色计算及映射在 `ConvertTools.Color.getColorByRGBVal` 完成。
-- 颜色距离计算见 `ConvertTools.Color.colorDistance`。
-
-## 依赖
-
-- JDK 8+
-
-## License
-
-MIT
-
----
+适合 Minecraft 地图开发、数据处理和相关工具扩展。
