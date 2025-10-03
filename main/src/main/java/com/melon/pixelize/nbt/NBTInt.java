@@ -14,6 +14,10 @@ public class NBTInt extends NBTElement<Integer> {
         this(null, value);
     }
 
+    public NBTInt(Integer value) {
+        super(value);
+    }
+
     @Override
     public byte[] toBytes() {
         byte[] result = new byte[3 + 4 + keyNameLength];

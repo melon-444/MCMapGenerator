@@ -14,6 +14,10 @@ public class NBTLong extends NBTElement<Long> {
         this(null, value);
     }
 
+    public NBTLong(Long value) {
+        this(null, value);
+    }
+
     @Override
     public byte[] toBytes() {
         byte[] result = new byte[3 + 8 + keyNameLength];

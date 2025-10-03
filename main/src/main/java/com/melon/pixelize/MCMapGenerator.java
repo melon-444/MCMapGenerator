@@ -10,6 +10,7 @@ import java.util.zip.GZIPOutputStream;
 import com.melon.pixelize.nbt.io.GZipNBTWriter;
 
 import com.melon.pixelize.utils.ConvertTools;
+import com.melon.pixelize.utils.MapTileDatapackGenerator;
 import com.melon.pixelize.utils.MapTileGenerator;
 
 public class MCMapGenerator {
@@ -49,6 +50,19 @@ public class MCMapGenerator {
                     System.out.println("Input image path in ignore/ :");
                     ArrayList<ArrayList<byte[]>> targetTiles = ConvertTools
                             .convertImageToMapTIles(Path.of("ignore/" + sc.nextLine().trim()));
+                    
+                    ArrayList<String> commands;
+                    FileOutputStream funcFos;
+                    for(MapTileDatapackGenerator.Facing dir: MapTileDatapackGenerator.Facing.values()){
+                        funcFos = new FileOutputStream(Path.of("ignore/"+dir.name().toLowerCase()+".mcfunction").toFile());
+                        commands = MapTileDatapackGenerator
+                    .functionGenerator(dir, targetTiles, index);
+                        for(String perCmd:commands){
+                            funcFos.write(perCmd.getBytes());
+                            funcFos.write("\n".getBytes());
+                        }
+                        funcFos.close();
+                    }
 
                     for (int i = 0; i < targetTiles.size(); i++) {
                         for (int j = 0; j < targetTiles.get(0).size(); j++) {

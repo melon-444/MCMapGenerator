@@ -14,6 +14,10 @@ public class NBTByte extends NBTElement<Byte> {
         this(null, value);
     }
 
+    public NBTByte(Byte value) {
+        super(value);
+    }
+
     @Override
     public byte[] toBytes() {
         byte[] result = new byte[3 + 1 + keyNameLength];

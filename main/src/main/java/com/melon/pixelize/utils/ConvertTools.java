@@ -148,8 +148,7 @@ public class ConvertTools {
         int rolling_prog = 0;
         char[] rolling_char = new char[]{'\\','|','/','-'};
         while (!pool.isTerminated()) {
-            System.out.println("Progress: "+progress[0]+" / "+total_prog+rolling_char[rolling_prog]);
-            rolling_prog=++rolling_prog%4;
+            System.out.println("Tile progress: "+progress[0]+" / "+total_prog+rolling_char[rolling_prog=(++rolling_prog%4)]);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

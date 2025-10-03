@@ -14,6 +14,10 @@ public class NBTFloat extends NBTElement<Float> {
         this(null, value);
     }
 
+    public NBTFloat(Float value) {
+        super(value);
+    }
+
     @Override
     public byte[] toBytes() {
         int intBits = Float.floatToIntBits(payLoad);

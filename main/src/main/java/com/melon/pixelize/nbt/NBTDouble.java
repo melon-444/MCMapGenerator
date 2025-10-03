@@ -14,6 +14,10 @@ public class NBTDouble extends NBTElement<Double> {
         this(null, value);
     }
 
+    public NBTDouble(Double value) {
+        super(value);
+    }
+
     @Override
     public byte[] toBytes() {
         long longBits = Double.doubleToLongBits(payLoad);

@@ -12,6 +12,10 @@ public class NBTBoolean extends NBTByte {
     public NBTBoolean(boolean value) {
         super(null, (byte) (value ? 1 : 0));
     }
+    
+    public NBTBoolean(Boolean value) {
+        super(null, (byte) (value ? 1 : 0));
+    }
 
     @Override
     public String toString(){
