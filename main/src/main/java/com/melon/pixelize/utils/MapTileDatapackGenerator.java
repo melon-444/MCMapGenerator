@@ -1,9 +1,13 @@
 package com.melon.pixelize.utils;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.ZipOutputStream;
 
 import com.melon.pixelize.nbt.NBTInt;
 import com.melon.pixelize.nbt.NBTObjectBuilder;
@@ -114,6 +118,18 @@ public final class MapTileDatapackGenerator {
         return result;
     }
 
+
+    public static void generateDatapack(Path packname){
+    try (ZipOutputStream datapackOut = new ZipOutputStream(new FileOutputStream(packname.toFile()))) {
+        datapackOut.putNextEntry(null);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    }
+
+    
+    
     public enum Facing {
         BOTTOM, TOP, SOUTH, NORTH, EAST, WEST
     }
