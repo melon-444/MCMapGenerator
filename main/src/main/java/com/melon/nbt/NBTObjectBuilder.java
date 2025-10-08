@@ -111,6 +111,12 @@ public class NBTObjectBuilder implements Copyable {
         return this;
     }
 
+    /**
+     * Create a new Compound NBT element with name and several values created by constructor.
+     * @param keyName the name of the compound.
+     * @param values the values of the compound.
+     * @return this builder instance
+     */
     public NBTObjectBuilder Compound(String keyName, NBTElement<?>... values) {
         checkBuilt();
         NBTCompound value = new NBTCompound(keyName, values);
@@ -124,6 +130,13 @@ public class NBTObjectBuilder implements Copyable {
         lastBuilt.addElement(value);
         return this;
     }
+
+    /**
+     * Create a new List NBT element with name and several values created by constructor.
+     * @param keyName the name of the compound.
+     * @param values the values of the compound.
+     * @return this builder instance
+     */
 
     public NBTObjectBuilder List(String keyName, NBTElement<?>... values) {
         checkBuilt();
@@ -232,24 +245,31 @@ public class NBTObjectBuilder implements Copyable {
 
     public NBTObjectBuilder set(String keyName, NBTElement<?> element) {
         checkBuilt();
-        lastBuilt.removeElement(keyName);
-        element.setKeyName(keyName);
-        lastBuilt.addElement(element);
+        NBTElement<?> removal = lastBuilt.getElement(keyName);
+        if (removal != null) {
+            lastBuilt.removeElement(removal);
+            element.setKeyName(keyName);
+            lastBuilt.addElement(element);
+        }
         return this;
     }
 
     public <T> NBTObjectBuilder set(String keyName, Class<? extends NBTElement<T>> elementType, T value) {
         checkBuilt();
-        lastBuilt.removeElement(keyName);
-        NBTElement<T> instance = null;
-        try {
-            instance = elementType.getDeclaredConstructor(value.getClass()).newInstance(value);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException e) {
-            e.printStackTrace();
+        NBTElement<?> removal = lastBuilt.getElement(keyName);
+        if (removal != null) {
+            lastBuilt.removeElement(removal);
+            NBTElement<T> instance = null;
+            try {
+                instance = elementType.getDeclaredConstructor(value.getClass()).newInstance(value);
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException
+                    | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+            }
+            instance.setKeyName(keyName);
+            lastBuilt.addElement(instance);
         }
-        instance.setKeyName(keyName);
-        lastBuilt.addElement(instance);
         return this;
     }
 
@@ -307,9 +327,9 @@ public class NBTObjectBuilder implements Copyable {
         RootElement copyLastBuilt = null;
 
         if (lastBuilt instanceof NBTCompound result) {
-            copyLastBuilt = (RootElement)(NBTCompound)result.copy();
+            copyLastBuilt = (RootElement) (NBTCompound) result.copy();
         } else if (lastBuilt instanceof NBTList result) {
-            copyLastBuilt = (RootElement)(NBTList)result.copy();
+            copyLastBuilt = (RootElement) (NBTList) result.copy();
         }
 
         copyBuilder.lastBuilt = copyLastBuilt;

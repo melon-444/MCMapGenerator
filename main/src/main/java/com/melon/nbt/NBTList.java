@@ -2,7 +2,6 @@ package com.melon.nbt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import com.melon.nbt.interfac3.RootElement;
@@ -91,16 +90,22 @@ public class NBTList extends NBTElement<List<NBTElement<?>>> implements RootElem
     }
 
     public boolean removeElement(String keyname) {
-        Iterator<NBTElement<?>> it = payLoad.iterator();
-        while (it.hasNext()) {
-            NBTElement<?> element = it.next();
-            if (element.getKeyName().equals(keyname)) {
-                it.remove();
-                checkType();
-                return true;
-            }
+        NBTElement<?> removal = getElement(keyname);
+        if(removal != null) {
+            this.payLoad.remove(removal);
+            checkType();
+            return true;
         }
         return false;
+    }
+
+        public NBTElement<?> getElement(String keyname) {
+        for (NBTElement<?> element : payLoad) {
+            if (element.getKeyName().equals(keyname)) {
+                return element;
+            }
+        }
+        return null;
     }
 
     @Override
