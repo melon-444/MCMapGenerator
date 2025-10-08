@@ -23,4 +23,9 @@ public class NBTEnd extends NBTElement<Void> {
         return "";
     }
 
+    @Override
+    public String toJsonString(){
+        return "";
+    }
+
 }

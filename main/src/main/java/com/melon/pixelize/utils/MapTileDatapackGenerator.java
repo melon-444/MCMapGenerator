@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.ZipOutputStream;
 
+import com.melon.pixelize.nbt.NBTCompound;
 import com.melon.pixelize.nbt.NBTInt;
 import com.melon.pixelize.nbt.NBTObjectBuilder;
 
@@ -18,6 +20,9 @@ public final class MapTileDatapackGenerator {
         int x = MapTiles.size(), y = MapTiles.get(0).size();
         boolean oddX = x % 2 != 0, oddY = y % 2 != 0;
         ArrayList<String> result = new ArrayList<>();
+
+        result.add("#program generated");
+
         CommandTemplate fill = new CommandTemplate("fill", null, null, null, null, null, null, "minecraft:barrier");
         CommandTemplate summon = new CommandTemplate("summon", "minecraft:glow_item_frame", null, null, null, null);
         NBTObjectBuilder components = NBTObjectBuilder.buildCompound("components").Int("\"minecraft:map_id\"", 0);
@@ -71,19 +76,20 @@ public final class MapTileDatapackGenerator {
                             .Byte("Facing", (byte) direction.ordinal());
                     switch (direction) {
                         case BOTTOM:
-                            result.add(summon.toActualCmd("~" + (ti + -x / 2), "~-2", "~" + (-tj + y / 2+ (oddY ? 1 : 0)),
-                                    entityData.endCompound().toString()));
+                            result.add(
+                                    summon.toActualCmd("~" + (ti + -x / 2), "~-2", "~" + (-tj + y / 2 + (oddY ? 1 : 0)),
+                                            entityData.endCompound().toString()));
                             break;
                         case TOP:
                             result.add(summon.toActualCmd("~" + (ti + -x / 2), "~3", "~" + (tj + -y / 2),
                                     entityData.endCompound().toString()));
                             break;
                         case SOUTH:
-                            result.add(summon.toActualCmd("~" + (x-ti), "~" + (y - tj), "~",
+                            result.add(summon.toActualCmd("~" + (x - ti), "~" + (y - tj), "~",
                                     entityData.endCompound().toString()));
                             break;
                         case NORTH:
-                            result.add(summon.toActualCmd("~" + (ti-x), "~" + (y - tj), "~",
+                            result.add(summon.toActualCmd("~" + (ti - x), "~" + (y - tj), "~",
                                     entityData.endCompound().toString()));
                             break;
                         case EAST:
@@ -118,21 +124,77 @@ public final class MapTileDatapackGenerator {
         return result;
     }
 
+    public static void generateDatapack(Path PackName, ArrayList<ArrayList<byte[]>> MapTiles,Version version, int index) {
+        try (ZipOutputStream datapackOut = new ZipOutputStream(new FileOutputStream(PackName.toFile()))) {
+            datapackOut.putNextEntry(new java.util.zip.ZipEntry("pack.mcmeta"));
+            datapackOut.write(GenerateMCMeta(version).getBytes());
+            for (Facing dir : Facing.values()) {
+                ArrayList<String> function = functionGenerator(dir, MapTiles, index);
+                String path = "data/pixelize/function/" + PackName.getFileName().toString() + "_"
+                        + dir.name().toLowerCase() + ".mcfunction";
+                datapackOut.putNextEntry(new java.util.zip.ZipEntry(path));
+                for (String cmd : function) {
+                    datapackOut.write((cmd + "\n").getBytes());
+                }
+                datapackOut.closeEntry();
+            }
 
-    public static void generateDatapack(Path packname){
-    try (ZipOutputStream datapackOut = new ZipOutputStream(new FileOutputStream(packname.toFile()))) {
-        datapackOut.putNextEntry(null);
-    } catch (IOException e) {
-        e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    protected static String GenerateMCMeta(Version version){
+        NBTCompound mcmeta = NBTObjectBuilder
+        .buildCompound()
+        .directCompound(NBTObjectBuilder
+            .buildCompound("pack")
+            .String("description","Program generated datapack")
+            .Int("pack_format",version.DatapackVersion)
+            .endCompound())
+        .endCompound();
+        return mcmeta.toJsonString();
     }
 
-    
-    
     public enum Facing {
         BOTTOM, TOP, SOUTH, NORTH, EAST, WEST
     }
+
+    public enum Version{
+        NULL,V1_13("1.13",4),V1_21("1.21",48);
+
+        int DatapackVersion;
+        String versionName;
+
+        Version(){
+            versionName = null;
+            DatapackVersion = 0;
+        }
+
+        Version(String versionName,int DatapackVersion){
+            this.DatapackVersion = DatapackVersion;
+            this.versionName = versionName;
+        }
+
+        public static Version getVersion(String versionName){
+            for(Version v:values()){
+                if(versionName .equals(v.versionName) )
+                    return v;
+            }
+            return NULL;
+        }
+
+        public static List<String> getAvaliableVersions(){
+            ArrayList<String> arr = new ArrayList<>();
+            for(Version v:values())
+                if(v!=NULL)arr.add(v.versionName);
+            return arr;
+        }
+
+    }
+
+    
 }
 
 class CommandTemplate {

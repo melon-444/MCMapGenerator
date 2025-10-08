@@ -307,7 +307,7 @@ public class NBTObjectBuilder implements Cloneable {
         }else if (lastBuilt instanceof NBTList result) {
             copyLastbuilt = new NBTList(result.getKeyName(),result.getPayLoad());
         }
-
+        
         copyBuilder.lastBuilt = copyLastbuilt;
         
         return copyBuilder;

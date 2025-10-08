@@ -54,4 +54,17 @@ public class NBTLongArray extends NBTElement<long[]> {
         return sb.toString();
     }
 
+    @Override
+    public String toJsonString(){
+        StringBuilder sb = new StringBuilder(keyName.isEmpty()?"":new NBTString(keyName)+":");
+        sb.append("[");
+        if(payLoad!=null)
+        for(long e:payLoad)
+            sb.append(e+",");
+        if(payLoad!=null&&payLoad.length!=0)
+        sb.deleteCharAt(sb.length()-1);
+        sb.append("]");
+        return sb.toString();
+    }
+
 }

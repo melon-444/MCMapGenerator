@@ -83,5 +83,13 @@ public class NBTString extends NBTElement<String> {
         else return keyName.isEmpty()?"\'"+sb+"\'":keyName+":"+"\'"+sb+"\'";
     }
 
+    @Override
+    public String toJsonString(){
+        if(keyName.isEmpty()) return "\"\":"+toString();
+        String[] result = toString().split(keyName,2);
+        result[0] = new NBTString(keyName).toString();
+        return result[0]+result[1];
+    }
+
     
 }

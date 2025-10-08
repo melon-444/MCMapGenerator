@@ -104,4 +104,17 @@ public class NBTCompound extends NBTElement<List<NBTElement<?>>> implements root
         sb.append("}");
         return sb.toString();
     }
+
+    @Override
+    public String toJsonString() {
+        StringBuilder sb = new StringBuilder(keyName.isEmpty() ? "" : new NBTString(keyName) + ":");
+        sb.append("{");
+        if (payLoad != null && !payLoad.isEmpty()) {
+            for (NBTElement<?> e : payLoad)
+                sb.append(e.toJsonString() + ",");
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 }

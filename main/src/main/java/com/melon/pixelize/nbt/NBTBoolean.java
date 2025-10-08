@@ -21,4 +21,9 @@ public class NBTBoolean extends NBTByte {
     public String toString(){
         return keyName.isEmpty()?payLoad.toString():keyName+":"+(payLoad==0?"false":"true");
     }
+
+    @Override
+    public String toJsonString(){
+        return new NBTString(keyName)+":"+(payLoad==0?"false":"true");
+    }
 }
