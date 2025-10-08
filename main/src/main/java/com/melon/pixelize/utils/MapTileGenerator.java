@@ -1,7 +1,7 @@
 package com.melon.pixelize.utils;
 
-import com.melon.pixelize.nbt.NBTCompound;
-import com.melon.pixelize.nbt.NBTObjectBuilder;
+import com.melon.nbt.NBTCompound;
+import com.melon.nbt.NBTObjectBuilder;
 
 public class MapTileGenerator {
     /**

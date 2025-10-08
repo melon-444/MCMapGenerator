@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.zip.GZIPOutputStream;
 
-import com.melon.pixelize.nbt.io.GZipNBTWriter;
-
+import com.melon.nbt.io.GZipNBTWriter;
 import com.melon.pixelize.utils.ConvertTools;
 import com.melon.pixelize.utils.MapTileDatapackGenerator;
 import com.melon.pixelize.utils.MapTileGenerator;

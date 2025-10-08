@@ -12,11 +12,10 @@ import java.util.zip.GZIPOutputStream;
 
 import org.junit.jupiter.api.Test;
 
-import com.melon.pixelize.nbt.NBTCompound;
-import com.melon.pixelize.nbt.NBTElement;
-import com.melon.pixelize.nbt.NBTObjectBuilder;
-import com.melon.pixelize.nbt.io.GZipNBTWriter;
-
+import com.melon.nbt.NBTCompound;
+import com.melon.nbt.NBTElement;
+import com.melon.nbt.NBTObjectBuilder;
+import com.melon.nbt.io.GZipNBTWriter;
 import com.melon.pixelize.utils.ConvertTools;
 
 public class MapGenTest {

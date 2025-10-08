@@ -10,9 +10,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.ZipOutputStream;
 
-import com.melon.pixelize.nbt.NBTCompound;
-import com.melon.pixelize.nbt.NBTInt;
-import com.melon.pixelize.nbt.NBTObjectBuilder;
+import com.melon.nbt.NBTCompound;
+import com.melon.nbt.NBTInt;
+import com.melon.nbt.NBTObjectBuilder;
 
 public final class MapTileDatapackGenerator {
     public static ArrayList<String> functionGenerator(Facing direction, ArrayList<ArrayList<byte[]>> MapTiles,
@@ -58,12 +58,13 @@ public final class MapTileDatapackGenerator {
             for (int j = 0; j < y; j++) {
                 final int ti = i, tj = j, tindex = index;
                 pool.submit(() -> {
-                    NBTObjectBuilder copyCom = null;
+                    NBTObjectBuilder copyCom =null;
                     try {
-                        copyCom = components.clone();
-                    } catch (CloneNotSupportedException e) {
+                        copyCom = components.copy();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     NBTObjectBuilder entityData = NBTObjectBuilder.buildCompound()
                             .directCompound(
                                     NBTObjectBuilder.buildCompound("Item")
