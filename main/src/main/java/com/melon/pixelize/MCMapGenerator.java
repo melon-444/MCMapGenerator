@@ -1,11 +1,10 @@
 package com.melon.pixelize;
 
-import java.io.File;
-import java.io.FileOutputStream;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.zip.GZIPOutputStream;
+
 
 import com.melon.nbt.io.GZipNBTWriter;
 import com.melon.pixelize.utils.ConvertTools;
@@ -14,32 +13,7 @@ import com.melon.pixelize.utils.MapTileGenerator;
 import com.melon.pixelize.utils.MapTileDatapackGenerator.Version;
 
 public class MCMapGenerator {
-    static class Test1 {
-        public static void main(String[] args) {
-            System.out.println("MCMapGenerator Test");
-            try (Scanner sc = new Scanner(System.in)) {
-                while (true) {
-                    int index = 1;
-                    while (Path.of("ignore/map_" + index + ".dat").toFile().exists())
-                        index++;
-                    System.out.println("Input image path in ignore/ :");
-                    byte[] target = ConvertTools.convertImageToMCMapArt(Path.of("ignore/" + sc.nextLine().trim()), 5);
-
-                    File f = Path.of("ignore/map_" + index + ".dat").toFile();
-                    if (!f.exists())
-                        f.createNewFile();
-                    GZipNBTWriter writer = new GZipNBTWriter(new GZIPOutputStream(new FileOutputStream(f)));
-                    writer.write(MapTileGenerator.getMapDatByByte(target));
-                    writer.close();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    static class Test2 {
+    static class Test{
         public static void main(String[] args) {
             try (Scanner sc = new Scanner(System.in)) {
                 Version v;
