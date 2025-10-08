@@ -131,7 +131,7 @@ public final class MapTileDatapackGenerator {
             datapackOut.write(GenerateMCMeta(version).getBytes());
             for (Facing dir : Facing.values()) {
                 ArrayList<String> function = functionGenerator(dir, MapTiles, index);
-                String path = "data/pixelize/function/" + PackName.getFileName().toString() + "_"
+                String path = "data/pixelize/function/" + PackName.getFileName().toString().split("\\.zip")[0] + "_"
                         + dir.name().toLowerCase() + ".mcfunction";
                 datapackOut.putNextEntry(new java.util.zip.ZipEntry(path));
                 for (String cmd : function) {
