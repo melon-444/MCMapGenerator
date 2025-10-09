@@ -89,7 +89,7 @@ public class ConvertTools {
         return null;
     }
 
-    public static ArrayList<ArrayList<byte[]>> convertImageToMapTIles(Path input) {
+    public static ArrayList<ArrayList<byte[]>> convertImageToMapTIles(Path input){
         BufferedImage image;
         try {
             image = ImageIO.read(input.toFile());
@@ -97,6 +97,12 @@ public class ConvertTools {
             e.printStackTrace();
             return null;
         }
+        return convertImageToMapTIles(image);
+    }
+
+    public static ArrayList<ArrayList<byte[]>> convertImageToMapTIles(BufferedImage image) {
+        
+
         int w = image.getWidth(), h = image.getHeight();
         int xTiles = w / 128 + (w % 128 == 0 ? 0 : 1), yTiles = h / 128 + (h % 128 == 0 ? 0 : 1);
 

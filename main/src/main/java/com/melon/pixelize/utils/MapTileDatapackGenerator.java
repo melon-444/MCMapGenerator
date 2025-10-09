@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.HashMap; TODO:
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,38 +23,14 @@ public final class MapTileDatapackGenerator {
 
         result.add("#program generated");
 
-        CommandTemplate fill = new CommandTemplate("fill", null, null, null, null, null, null, "minecraft:barrier");
+
         CommandTemplate summon = new CommandTemplate("summon", "minecraft:glow_item_frame", null, null, null, null);
         NBTObjectBuilder components = NBTObjectBuilder.buildCompound("components").Int("\"minecraft:map_id\"", 0);
-        switch (direction) {
-            case BOTTOM:
-                result.add(fill.toActualCmd("~" + (-x / 2), "~-1", "~" + (-y / 2+1), "~" + (x / 2 + (oddX ? 1 : 0)-1),
-                        "~-1", "~" + (y / 2 + (oddY ? 1 : 0))));
-                break;
-            case TOP:
-                result.add(fill.toActualCmd("~" + (-x / 2), "~2", "~" + (-y / 2), "~" + (x / 2 + (oddX ? 1 : 0)-1), "~2",
-                        "~" + (y / 2 + (oddY ? 1 : 0)-1) ));
-                break;
-            case SOUTH:
-                result.add(fill.toActualCmd("~" + (x), "~1", "~1", "~1", "~" + (y), "~1"));
-                break;
-            case NORTH:
-                result.add(fill.toActualCmd("~" + (-x), "~1", "~-1", "~-1", "~" + (y), "~-1"));
-                break;
-            case EAST:
-                result.add(fill.toActualCmd("~1", "~1", "~" + (x-1), "~1", "~" + (y), "~"));
-                break;
-            case WEST:
-                result.add(fill.toActualCmd("~-1", "~1", "~" + (-x+1), "~-1", "~" + (y), "~"));
-                break;
-            default:
-                throw new IllegalArgumentException("Wrong direction " + direction.name() + " !");
-        }
+        
         int THREAD_CNT = x * y;
         final int total_prog = THREAD_CNT;
         final int[] progress = new int[] { 0 };
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_CNT);
-        //HashMap<Integer,ArrayList<Integer>> idmap = new HashMap<>();//TODO:
         for (int i = 0; i < x; i++)
             for (int j = 0; j < y; j++) {
                 final int ti = i, tj = j, tindex = index;
@@ -77,23 +52,19 @@ public final class MapTileDatapackGenerator {
                                                     copyCom.set("\"minecraft:map_id\"", NBTInt.class, tindex)
                                                             .toCompound())
                                             .endCompound())
-                            .Byte("Facing", (byte) direction.ordinal());
-
-                        //try {
-                            //System.out.println(entityData.toCompound().toString());
-                            //idmap.put(tindex, new ArrayList<>(Arrays.asList(ti,tj)));//TODO:
-                        //} catch (Exception e) {
-                          //  e.printStackTrace();
-                        //}
+                            .Byte("Facing", (byte) direction.ordinal())
+                            .Boolean("Invulnerable", true)
+                            .Boolean("Fixed", true)
+                            .Boolean("Invisible", true);
 
                     switch (direction) {
                         case BOTTOM:
                             result.add(
-                                    summon.toActualCmd("~" + (ti + -x / 2), "~-2", "~" + (-tj + y / 2 + (oddY ? 1 : 0)),
+                                    summon.toActualCmd("~" + (ti + -x / 2+ (oddX ? 1 : 0)), "~-2", "~" + (-tj + y / 2 + (oddY ? 1 : 0)),
                                             entityData.endCompound().toString()));
                             break;
                         case TOP:
-                            result.add(summon.toActualCmd("~" + (ti + -x / 2), "~3", "~" + (tj + -y / 2),
+                            result.add(summon.toActualCmd("~" + (ti + -x / 2+ (oddX ? 1 : 0)), "~4", "~" + (tj + -y / 2+ (oddY ? 1 : 0)),
                                     entityData.endCompound().toString()));
                             break;
                         case SOUTH:
